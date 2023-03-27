@@ -24,17 +24,20 @@ const commentSchema = mongoose.Schema({
 const foodSchema = mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        minLength: 3
     },
     description: {
         type: String,
-        required: true
     },
     price : {
         type: String,
         required: true
     },
-    score: Number,
+    score: {
+        type: Number,
+        default: 1000
+    },
     photo: String,
     comments: [commentSchema]
 })
@@ -89,6 +92,7 @@ restaurantShema.methods.generateAuthToken = function () {
     const data = {
         _id: this._id,
         username: this.adminUsername,
+        password: this.adminPassword,
         role: "restaurant"
     }
     

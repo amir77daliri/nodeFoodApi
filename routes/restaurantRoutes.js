@@ -7,8 +7,9 @@ const {
     createRestaurant, 
     updateRestaurant, 
     deleteRestaurant,
-    adminLogin
+    adminLogin,
 } = require('../controllers/restauranController')
+
 
 
 
@@ -20,5 +21,6 @@ router.put('/edit/:id', updateRestaurant) // update restaurant info
 router.delete('/delete/:id', deleteRestaurant) // delete restaurant
 router.post('/admin/login', getRestaurant) // restaurant detail
 router.get('/:id', getRestaurant) // restaurant detail
+
 
 module.exports = router;

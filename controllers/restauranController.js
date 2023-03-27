@@ -17,11 +17,11 @@ exports.getRestaurant = async (req, res) => {
         const id = req.params.id;
         const restaurantData = await Restaurants.findById(id).select("-adminPassword")
         if(!restaurantData) {
-            res.status(404).send("یافت نشد!");
+            res.status(404).send("رستوران مورد نظر یافت نشد!");
         }
         res.send(restaurantData);
     } catch (err) {
-        console.log(err)
+        res.status(404).send("رستوران مورد نظر یافت نشد!");
     }
 }
 
@@ -90,3 +90,5 @@ exports.adminLogin = async (req, res) => {
         res.status(400).send(err.errors);
     }
 }
+
+
