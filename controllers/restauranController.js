@@ -29,11 +29,10 @@ exports.createRestaurant = async (req, res) => {
         await Restaurants.Validation(req.body)
         const {name, description, address='', adminUsername, adminPassword} = req.body
         const restaurant = await Restaurants.create({name, description, address, adminUsername, adminPassword})
-        res.send({adminPassword: __dirname, ...restaurant})
+        res.send({adminPassword: _, ...restaurant})
         
     } catch (err) {
-        console.log(err)
-        res.status(400).send("اطلاعات ورودی نادرست!")
+        res.status(400).send(err.errors);
     }
 }
 
