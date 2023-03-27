@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt')
+
 const Restaurants = require('../models/restaurant');
 
 
@@ -29,9 +31,11 @@ exports.createRestaurant = async (req, res) => {
         await Restaurants.Validation(req.body)
         const {name, description, address='', adminUsername, adminPassword} = req.body
         const restaurant = await Restaurants.create({name, description, address, adminUsername, adminPassword})
-        res.send({adminPassword: _, ...restaurant})
+        restaurant['adminPassword'] = '';
+        res.status(201).send(restaurant)
         
     } catch (err) {
+        console.log(err)
         res.status(400).send(err.errors);
     }
 }
@@ -62,5 +66,27 @@ exports.deleteRestaurant = async (req, res) => {
         res.status(204).send();
     } catch (error) {
         res.status(404).send("رستوران با آیدی مورد نظر یافت نشد.")
+    }
+}
+
+
+// restaurant admin login :
+exports.adminLogin = async (req, res) => {
+    try {
+        
+        await Restaurants.adminValidation(req.body);
+        const restaurant = await Restaurants.findOne({adminUsername: req.body.username})
+        if(!restaurant) {
+            return res.status(404).send("رستوران با ادمین مورد نظر یافت نشد!");
+        }
+        // check password :
+        const result = await bcrypt.compare(req.body.password, restaurant.adminPassword);
+        if(!result) {
+            return res.status(404).send("رستوران با ادمین مورد نظر یافت نشد!");
+        }
+        const token = restaurant.generateAuthToken();
+        res.status(200).send({token})
+    } catch (err) {
+        res.status(400).send(err.errors);
     }
 }

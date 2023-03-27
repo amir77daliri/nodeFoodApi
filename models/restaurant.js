@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const restaurantValidator = require('../validators/restaurantValidator')
+const restaurantValidator = require('../validators/restaurantValidator');
+const restaurantAdminValidator = require('../validators/loginValidator');
+
 
 // Embedded Documents
 
@@ -40,11 +43,13 @@ const foodSchema = mongoose.Schema({
 const restaurantShema = mongoose.Schema({
     adminUsername: {
         type: String,
-        required: true
+        required: true,
     },
     adminPassword: {
         type: String,
-        required: true
+        required: true,
+        minLength: 4,
+        maxLength: 100
     },
     name: {
         type: String,
@@ -70,9 +75,27 @@ const restaurantShema = mongoose.Schema({
 
 })
 
+
 restaurantShema.statics.Validation = function (data) {
     return restaurantValidator.validate(data, {abortEarly: false});
 }
+
+restaurantShema.statics.adminValidation = function (data) {
+    return restaurantAdminValidator.validate(data, {abortEarly: false});
+}
+
+// set jwt token for admin:
+restaurantShema.methods.generateAuthToken = function () {
+    const data = {
+        _id: this._id,
+        username: this.adminUsername,
+        role: "restaurant"
+    }
+    
+    return jwt.sign(data, process.env.jwtPrivateKey)
+}
+
+
 
 restaurantShema.pre("save", async function(next) {
     let restaurant = this;
