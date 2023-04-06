@@ -15,7 +15,7 @@ exports.getRestaurantsList = async (req, res) => {
 exports.getRestaurant = async (req, res) => {
     try {
         const id = req.params.id;
-        const restaurantData = await Restaurants.findById(id).select("-adminPassword")
+        const restaurantData = await Restaurants.findById(id).select("-adminPassword -adminUsername")
         if(!restaurantData) {
             res.status(404).send("رستوران مورد نظر یافت نشد!");
         }
