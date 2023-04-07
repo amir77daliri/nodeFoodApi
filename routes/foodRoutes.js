@@ -19,11 +19,13 @@ const {
     deleteFood
 } = require('../controllers/foodControllers');
 
-const adminAuthenticate = require('../middlewares/adminAuthenticate');
+const isAdmin = require('../middlewares/permissions/isAdmin');
 
-router.get('/all', adminAuthenticate , getAllFood) // Get foods of restaurant
-router.post('/add', [adminAuthenticate, upload.single("photo")] , addFood) // Add food for restaurant
-router.delete('/delete/:foodId', adminAuthenticate , deleteFood) // delete food from restaurant
+// this Actions are just for restaurant admin
+
+router.get('/all', isAdmin , getAllFood) // Get foods of restaurant
+router.post('/add', [isAdmin, upload.single("photo")] , addFood) // Add food for restaurant
+router.delete('/delete/:foodId', isAdmin , deleteFood) // delete food from restaurant
 
 
 module.exports = router;

@@ -5,6 +5,24 @@ const jwt = require('jsonwebtoken');
 const userValidationSchema = require('../validators/userValidator');
 
 
+const factorSchema = mongoose.Schema({
+    restaurantId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Restaurants"
+    },
+    foods : [
+        {
+            name: String,
+            foodId: String,
+            price: Number
+        }
+    ],
+    totalPrice: Number,
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+})
 
 const userSchema = mongoose.Schema({
     fullname: {
@@ -33,7 +51,10 @@ const userSchema = mongoose.Schema({
     is_active: {
         type: Boolean,
         default: false
-    }
+    },
+
+    carts: [factorSchema]
+
 })
 
 

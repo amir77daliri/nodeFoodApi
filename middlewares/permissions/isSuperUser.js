@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-const User = require('../../models/User');
 
-// authenticate super user
+// check super user permission
 const isSuperUser = async (req, res, next) => {
     const token = req.header('auth-token');
     if(!token) {

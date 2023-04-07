@@ -88,6 +88,19 @@ exports.verifyRegister = async (req, res) => {
     } catch (error) {
         res.status(500).send(error)
     }
+}
 
 
+// shopping actions -->
+
+exports.addFactor = async (req, res) => {
+    const {restaurantId, foods, totalPrice} = {...req.body};
+    if(!foods) {
+        return res.status(400).send("سبد خرید نباید خالی باشد.")
+    }
+    if(!restaurantId || !totalPrice) {
+        return res.status(400).send("اطلاعات ارسالی ناقص است، شناسه رستوران و مبلغ فاکتور را ارسال کنید.")
+    }
+
+    
 }

@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-const Restaurants = require('../models/restaurant');
+const Restaurants = require('../../models/restaurant');
 
-// authenticate restaurant admin
-const adminAuthenticate = async (req, res, next) => {
+// check restaurant admin permission
+const isAdmin = async (req, res, next) => {
     const token = req.header('auth-token');
     if(!token) {
         return res.status(401).send("شما مجوز لازم برای این کار را ندارید!")
@@ -19,7 +19,7 @@ const adminAuthenticate = async (req, res, next) => {
     try {
         const restaurant = await Restaurants.findOne({adminUsername: req.user.username})
         if(!restaurant) {
-            res.status(404).send("ادمین یا رستوران مورد نظر یافت نشد!")
+            return res.status(404).send("ادمین یا رستوران مورد نظر یافت نشد!")
         }
         if(restaurant.adminPassword === req.user.password) {
             return next()
@@ -31,4 +31,4 @@ const adminAuthenticate = async (req, res, next) => {
 }
 
 
-module.exports = adminAuthenticate;
+module.exports = isAdmin;
