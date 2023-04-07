@@ -12,9 +12,19 @@ const factorSchema = mongoose.Schema({
     },
     foods : [
         {
-            name: String,
-            foodId: String,
-            price: Number
+            name: {
+                type: String,
+                required: true
+            },
+            foodId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Restaurants"
+            },
+            price: {
+                type: Number,
+                required: true
+            },
+            count: Number
         }
     ],
     totalPrice: Number,
@@ -53,7 +63,7 @@ const userSchema = mongoose.Schema({
         default: false
     },
 
-    carts: [factorSchema]
+    factors: [factorSchema]
 
 })
 

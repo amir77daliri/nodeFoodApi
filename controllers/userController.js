@@ -8,6 +8,8 @@ const sendCode = require('../utils/sendCode');
 
 // my cache :
 const cacheCode = new NodeCache({stdTTL: 2*60*60, checkperiod:60*60})
+const cacheFactor = new NodeCache({stdTTL: 2*24*60*60, checkperiod: 2*24*60*60})
+
 
 // handle login
 exports.userLogin = async (req, res) => {
@@ -102,5 +104,20 @@ exports.addFactor = async (req, res) => {
         return res.status(400).send("اطلاعات ارسالی ناقص است، شناسه رستوران و مبلغ فاکتور را ارسال کنید.")
     }
 
-    
+    try {
+        const user = await User.findById(req.user._id)
+        if(!user) {
+            return res.status(400).send("کاربری یافت نشد، برای ادامه خرید در سایت ثبت نام کنید")
+        }
+        
+        // cache factor for final pay :
+        const data = cacheFactor.get(req.user._id)
+        if(data) {
+            cacheFactor.del(req.user._id)
+        }
+        cacheFactor.set(req.user._id, req.body)
+        return res.status(200).send("سبد خرید اضافه شد جهت تکمیل فرآین و پرداخت اقدام کنید.")
+    } catch (error) {
+        return res.status(400).send("فرمت اطلاعات ارسالی نادرست است.")
+    }
 }
